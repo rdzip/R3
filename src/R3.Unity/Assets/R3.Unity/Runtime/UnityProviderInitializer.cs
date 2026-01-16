@@ -10,6 +10,13 @@ namespace R3
 #endif
     public static class UnityProviderInitializer
     {
+        static Action<Exception> unhandledExceptionHandler = UnhandledExceptionHandler;
+
+        static void UnhandledExceptionHandler(Exception ex)
+        {
+            UnityEngine.Debug.LogException(ex);
+        }
+
         static UnityProviderInitializer()
         {
             SetDefaultObservableSystem();
@@ -18,7 +25,7 @@ namespace R3
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterAssembliesLoaded)]
         public static void SetDefaultObservableSystem()
         {
-            SetDefaultObservableSystem(static ex => UnityEngine.Debug.LogException(ex));
+            SetDefaultObservableSystem(unhandledExceptionHandler);
         }
 
         public static void SetDefaultObservableSystem(Action<Exception> unhandledExceptionHandler)
